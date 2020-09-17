@@ -7,20 +7,20 @@ public class MazeGenerator {
     boolean[] visited;
     int v;
     int width;
-    char[][] charMaze;
+    char[][] maze;
     public MazeGenerator(int width, int height) {
         v = width * height;
         this.width = width;
         adjMatrix = new boolean[v][v];
         visited = new boolean[v];
-        dfs(0);
-        charMaze = charMaze();
+        dfs(width*height-1);
+        maze = maze();
         modifyMaze();
     }
     public boolean[][] getAdjMatrix() {
         return adjMatrix;
     }
-    private char[][] charMaze() {
+    private char[][] maze() {
         //┌ ┬ ┐ —
         //├ ┼ ┤
         //└ ┴ ┘
@@ -62,17 +62,46 @@ public class MazeGenerator {
         return maze;
     }
     private void modifyMaze() {
-        for (int i = 2; i < charMaze.length-1; i+=2) {
-            if (charMaze[i][1] == '|') charMaze[i][0] = '┬';
-            if (charMaze[i][charMaze[0].length-2] == '|') charMaze[i][charMaze[0].length-1] = '┴';
+        for (int i = 2; i < maze.length-1; i+=2) {
+            if (maze[i][1] == '|') maze[i][0] = '┬';
+            if (maze[i][maze[0].length-2] == '|') maze[i][maze[0].length-1] = '┴';
         }
-        for (int i = 2; i < charMaze[0].length-1; i+=2) {
-            if (charMaze[1][i] == '—') charMaze[0][i] = '├';
-            if (charMaze[charMaze.length-2][i] == '—') charMaze[charMaze.length-1][i] = '┤';
+        for (int i = 2; i < maze[0].length-1; i+=2) {
+            if (maze[1][i] == '—') maze[0][i] = '├';
+            if (maze[maze.length-2][i] == '—') maze[maze.length-1][i] = '┤';
+        }
+        for (int y = 1; y < maze[0].length-1; y++) {
+            for (int x = 1; x < maze.length-1; x++) {
+                if (isWall(maze[x][y])) {
+                    if (isWall(maze[x][y-1])) {
+                        if (isWall(maze[x][y+1])) {
+                            if (isWall(maze[x-1][y])) {
+                                if (isWall(maze[x+1][y])) maze[x][y] = '┼';
+                                else maze[x][y] = '┤';
+                            } else if (isWall(maze[x+1][y])) maze[x][y] = '├';
+                            else maze[x][y] = '|';
+                        } else if (isWall(maze[x-1][y])) {
+                            if (isWall(maze[x+1][y])) maze[x][y] = '┴';
+                            else maze[x][y] = '┘';
+                        } else if (isWall(maze[x+1][y])) maze[x][y] = '└';
+                        else maze[x][y] = '|';
+                    } else if (isWall(maze[x][y+1])) {
+                        if (isWall(maze[x - 1][y])) {
+                            if (isWall(maze[x + 1][y])) maze[x][y] = '┬';
+                            else maze[x][y] = '┐';
+                        } else if (isWall(maze[x + 1][y])) maze[x][y] = '┌';
+                        else maze[x][y] = '|';
+                    } else maze[x][y] = '—';
+                }
+            }
         }
     }
-    public char[][] getCharMaze() {
-        return charMaze;
+    public static boolean isWall(char c) {
+        return c == '—' || c == '|' || c == '┌' || c == '┬' || c == '┐' || c == '├' ||
+                c == '┼' || c == '┤' || c == '└' || c == '┴' || c == '┘';
+    }
+    public char[][] getMaze() {
+        return maze;
     }
     private void dfs(int n) {
         visited[n] = true;
@@ -96,7 +125,7 @@ public class MazeGenerator {
 
     public static void main(String[] args) {
         MazeGenerator mazeGenerator = new MazeGenerator(10, 10);
-        char[][] maze = mazeGenerator.getCharMaze();
+        char[][] maze = mazeGenerator.getMaze();
         for (int y = 0; y < maze[0].length; y++) {
             for (int x = 0; x < maze.length; x++) {
                 System.out.print(maze[x][y]);

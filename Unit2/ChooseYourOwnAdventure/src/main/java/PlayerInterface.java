@@ -21,7 +21,7 @@ public class PlayerInterface {
         while(gameRunning) {
             System.out.println("VIEW OF MAZE");
             spacer();
-            char[][] view = gameManager.maze;
+            char[][] view = gameManager.playerView();
             for (int y = 0; y < view[0].length; y++) {
                 for (int x = 0; x < view.length*2; x++) {
                     if (x % 2 == 0) System.out.print(view[x/2][y]);
@@ -56,6 +56,7 @@ public class PlayerInterface {
                 default:
                     System.out.println("Unknown command. Please try again.");
             }
+            spacer();
         }
     }
 
@@ -65,7 +66,7 @@ public class PlayerInterface {
         System.out.print("What height would you like the maze to be? ");
         int height = Integer.parseInt(scanner.nextLine());
         PlayerInterface playerInterface = new PlayerInterface(width, height);
-        System.out.println("You are the player, P. Your goal is to exit the maze. You can only see a 3x3 portion of the maze at a time.");
+        System.out.println("You are the player, P. Your goal is to exit the maze. You can only see a 5x5 portion of the maze at a time.");
         playerInterface.gameLoop();
     }
 }

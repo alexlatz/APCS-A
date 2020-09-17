@@ -5,42 +5,36 @@ public class GameManager {
     public int playerX, playerY;
     public GameManager(int width, int height) {
         MazeGenerator mazeGenerator = new MazeGenerator(width, height);
-        maze = mazeGenerator.getCharMaze();
-        for (int y = maze[0].length-1; y >= 0; y--) {
-            for (int x = 0; x < maze.length; x++) {
-                if (maze[x][y] == ' ') {
-                    playerX = x;
-                    playerY = y;
-                    break;
-                }
-            }
-            if (playerX != 0 || playerY != 0) break;
-        }
+        maze = mazeGenerator.getMaze();
+        playerX = width*2-1;
+        playerY = height*2-1;
         maze[playerX][playerY] = 'P';
+        maze[playerX][playerY+1] = ' ';
+        maze[1][1] = 'G';
     }
     public boolean moveUp() {
-        if (maze[playerX][playerY-1]!= '#') {
+        if (!MazeGenerator.isWall(maze[playerX][playerY-1])) {
             maze[playerX][playerY--] = ' ';
             maze[playerX][playerY] = 'P';
             return true;
         } else return false;
     }
     public boolean moveDown() {
-        if (maze[playerX][playerY+1]!= '#') {
+        if (!MazeGenerator.isWall(maze[playerX][playerY+1])) {
             maze[playerX][playerY++] = ' ';
             maze[playerX][playerY] = 'P';
             return true;
         } else return false;
     }
     public boolean moveLeft() {
-        if (maze[playerX-1][playerY]!= '#') {
+        if (!MazeGenerator.isWall(maze[playerX-1][playerY])) {
             maze[playerX--][playerY] = ' ';
             maze[playerX][playerY] = 'P';
             return true;
         } else return false;
     }
     public boolean moveRight() {
-        if (maze[playerX+1][playerY]!= '#') {
+        if (!MazeGenerator.isWall(maze[playerX+1][playerY])) {
             maze[playerX++][playerY] = ' ';
             maze[playerX][playerY] = 'P';
             return true;
