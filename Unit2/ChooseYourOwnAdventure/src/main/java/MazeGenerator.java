@@ -74,27 +74,33 @@ public class MazeGenerator {
             for (int x = 1; x < maze.length-1; x++) {
                 if (isWall(maze[x][y])) {
                     if (isWall(maze[x][y-1])) {
-                        if (isWall(maze[x][y+1])) {
-                            if (isWall(maze[x-1][y])) {
-                                if (isWall(maze[x+1][y])) maze[x][y] = '┼';
-                                else maze[x][y] = '┤';
-                            } else if (isWall(maze[x+1][y])) maze[x][y] = '├';
-                            else maze[x][y] = '|';
-                        } else if (isWall(maze[x-1][y])) {
-                            if (isWall(maze[x+1][y])) maze[x][y] = '┴';
-                            else maze[x][y] = '┘';
-                        } else if (isWall(maze[x+1][y])) maze[x][y] = '└';
-                        else maze[x][y] = '|';
+                        checkUp(x, y);
                     } else if (isWall(maze[x][y+1])) {
-                        if (isWall(maze[x - 1][y])) {
-                            if (isWall(maze[x + 1][y])) maze[x][y] = '┬';
-                            else maze[x][y] = '┐';
-                        } else if (isWall(maze[x + 1][y])) maze[x][y] = '┌';
-                        else maze[x][y] = '|';
+                        checkDown(x, y);
                     } else maze[x][y] = '—';
                 }
             }
         }
+    }
+    private void checkUp(int x, int y) {
+        if (isWall(maze[x][y+1])) {
+            if (isWall(maze[x-1][y])) {
+                if (isWall(maze[x+1][y])) maze[x][y] = '┼';
+                else maze[x][y] = '┤';
+            } else if (isWall(maze[x+1][y])) maze[x][y] = '├';
+            else maze[x][y] = '|';
+        } else if (isWall(maze[x-1][y])) {
+            if (isWall(maze[x+1][y])) maze[x][y] = '┴';
+            else maze[x][y] = '┘';
+        } else if (isWall(maze[x+1][y])) maze[x][y] = '└';
+        else maze[x][y] = '|';
+    }
+    private void checkDown(int x, int y) {
+        if (isWall(maze[x - 1][y])) {
+            if (isWall(maze[x + 1][y])) maze[x][y] = '┬';
+            else maze[x][y] = '┐';
+        } else if (isWall(maze[x + 1][y])) maze[x][y] = '┌';
+        else maze[x][y] = '|';
     }
     public static boolean isWall(char c) {
         return c == '—' || c == '|' || c == '┌' || c == '┬' || c == '┐' || c == '├' ||

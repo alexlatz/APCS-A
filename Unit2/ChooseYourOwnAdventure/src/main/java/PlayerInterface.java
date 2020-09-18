@@ -12,7 +12,26 @@ public class PlayerInterface {
         System.out.println("----------------------");
         System.out.println();
     }
-    private void handleMove(boolean result, String direction) {
+    private void handleMove(boolean result, String direction, String command) {
+        String[] move = command.split(" ");
+        if (move.length > 1) {
+            boolean hitWall = true;
+            if (move[1].toUpperCase().equals("WALL")) {
+                while (hitWall) hitWall = gameManager.lastMove();
+            }
+            else {
+                try {
+                    if (Integer.parseInt(move[1]) > 1) {
+                        for (int i = 0; i < Integer.parseInt(move[1]); i++) {
+                            if (hitWall) hitWall = gameManager.lastMove();
+                            else break;
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Please add a valid command after the direction.");
+                }
+            }
+        }
         if (!result) System.out.println("You run into the wall of the maze, hitting your head.");
         else System.out.println("You move " + direction + " in the maze.");
     }
@@ -24,7 +43,9 @@ public class PlayerInterface {
             char[][] view = gameManager.playerView();
             for (int y = 0; y < view[0].length; y++) {
                 for (int x = 0; x < view.length*2; x++) {
-                    if (x % 2 == 0) System.out.print(view[x/2][y]);
+                    if (x % 2 == 0) {
+                        System.out.print(view[x/2][y]);
+                    }
                     else System.out.print(" ");
                 }
                 System.out.println();
@@ -36,25 +57,30 @@ public class PlayerInterface {
             System.out.println("Enter \"LEFT\" to move to the left.");
             System.out.println("Enter \"RIGHT\" to move to the right.");
             System.out.println("Enter \"QUIT\" to quit the maze.");
+            System.out.println("To move multiple spaces at once, add a number after the directional command or add \"WALL\" to move to the next wall.");
             String command = scanner.nextLine();
-            switch (command.toUpperCase()) {
+            switch (command.toUpperCase().split(" ")[0]) {
                 case "UP":
-                    handleMove(gameManager.moveUp(), "upwards");
+                    handleMove(gameManager.moveUp(), "upwards", command);
                     break;
                 case "DOWN":
-                    handleMove(gameManager.moveDown(), "downwards");
+                    handleMove(gameManager.moveDown(), "downwards", command);
                     break;
                 case "LEFT":
-                    handleMove(gameManager.moveLeft(), "to the left");
+                    handleMove(gameManager.moveLeft(), "to the left", command);
                     break;
                 case "RIGHT":
-                    handleMove(gameManager.moveRight(), "to the right");
+                    handleMove(gameManager.moveRight(), "to the right", command);
                     break;
                 case "QUIT":
                     gameRunning = false;
                     break;
                 default:
                     System.out.println("Unknown command. Please try again.");
+            }
+            if (gameManager.playerX == 1 && gameManager.playerY == 1) {
+                System.out.println("You have found the exit! Congratulations on escaping the maze.");
+                gameRunning = false;
             }
             spacer();
         }
