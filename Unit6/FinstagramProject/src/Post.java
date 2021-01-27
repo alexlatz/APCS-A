@@ -1,3 +1,4 @@
+// Alex Latz
 public class Post {
     private final String imageUrl;
     private final String caption;
@@ -8,5 +9,12 @@ public class Post {
         this.caption = caption;
         this.user = user;
         System.out.println("New post from " + user.getHandle() + ": " + caption + " Image: " + imageUrl);
+    }
+
+    @Override
+    public String toString() {
+        return "Post from " + this.user.getHandle() + ":\n"
+                + this.caption + "\n"
+                + "Image: " + this.imageUrl;
     }
 }

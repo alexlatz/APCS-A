@@ -1,3 +1,4 @@
+// Alex Latz
 public class FinstaUser {
     private final String firstName;
     private final String lastName;
@@ -14,7 +15,7 @@ public class FinstaUser {
     }
 
     public void follow(final FinstaUser user) {
-        if (this.equals(user)) {
+        if (this == user) {
             System.out.println(this.handle + " can't follow themself!");
         } else if (this.following.contains(user)) {
             System.out.println(this.handle + " already follows " + user.getHandle() + "!");
@@ -26,7 +27,9 @@ public class FinstaUser {
     }
 
     public void unfollow(final FinstaUser user) {
-        if (!this.following.contains(user)) {
+        if (this == user) {
+            System.out.println(this.handle + " can't follow or unfollow themself!");
+        } else if (!this.following.contains(user)) {
             System.out.println(this.handle + " can't unfollow " + user.getHandle() + " without following them first!");
         } else {
             this.following.remove(user);
@@ -41,12 +44,6 @@ public class FinstaUser {
 
     public String getHandle() {
         return this.handle;
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        final FinstaUser that = (FinstaUser) o;
-        return this.handle.equals(that.getHandle());
     }
 
     @Override

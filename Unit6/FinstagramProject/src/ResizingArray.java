@@ -1,3 +1,4 @@
+// Alex Latz
 import java.util.Arrays;
 
 public class ResizingArray {
@@ -22,7 +23,9 @@ public class ResizingArray {
     public void remove(final FinstaUser user) {
         if (end == 0) throw new IllegalArgumentException();
         for (int i = 0; i < end; i++) {
-            if (arr[i].equals(user)) {
+            //This equality is a bad habit, but it's the easiest way to check if two objects literally hold the same memory address
+            //I would replace this with a .equals method that checks based on handle, but that's not unique so there's no other good way to do it
+            if (arr[i] == user) {
                 arr[i] = arr[end - 1];
                 arr[end - 1] = null;
                 end--;
@@ -37,7 +40,7 @@ public class ResizingArray {
 
     public boolean contains(final FinstaUser user) {
         for (int i = 0; i < end; i++) {
-            if (arr[i].equals(user)) return true;
+            if (arr[i] == user) return true;
         }
         return false;
     }
