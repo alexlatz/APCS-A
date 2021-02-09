@@ -34,6 +34,7 @@ public class ResizingArray {
                     System.arraycopy(arr, 0, newArr, 0, end + 1);
                     arr = newArr;
                 }
+                break;
             }
         }
     }
