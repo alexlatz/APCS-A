@@ -33,4 +33,9 @@ public class Playlist {
         return title;
     }
 
+    @Override
+    public String toString() {
+        return title + " by " + owner.getUsername();
+    }
+
 }
