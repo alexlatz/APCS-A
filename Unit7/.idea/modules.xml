@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/SortingAlgorithmComparisonLab/SortingAlgorithmComparisonLab.iml" filepath="$PROJECT_DIR$/SortingAlgorithmComparisonLab/SortingAlgorithmComparisonLab.iml" />
       <module fileurl="file://$PROJECT_DIR$/Unit7.iml" filepath="$PROJECT_DIR$/Unit7.iml" />
     </modules>
   </component>
