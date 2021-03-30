@@ -28,12 +28,31 @@ public class Board {
         this.winner = winner;
     }
 
-    public void placeMarker(final int col, final boolean player1) {
-        if (moves > board.length * board[0].length) throw new IndexOutOfBoundsException("There are no more available spaces");
-        if (colHeight[col] >= board[0].length) throw new IndexOutOfBoundsException("This column is full");
-        this.board[colHeight[col]][col] = (byte) (player1 ? 1 : 2);
+    public void placeMarker(int col, final boolean player1) {
+        col = col-1;
+        if (moves > getRows() * getCols()) throw new IndexOutOfBoundsException("There are no more available spaces");
+        if (colHeight[col] >= getRows()) throw new IndexOutOfBoundsException("This column is full");
+        final int height = getRows() - 1 - colHeight[col]++;
+        this.board[height][col] = (byte) (player1 ? 1 : 2);
         moves++;
-        checkWinner(colHeight[col]++, col);
+        checkWinner(height, col);
+    }
+
+    public byte[][] getBoard() {
+        //defensive copy for safety
+        byte[][] copy = new byte[getRows()][getCols()];
+        for (int i = 0; i < getRows(); i++) {
+            System.arraycopy(this.board[i], 0, copy[i], 0, getCols());
+        }
+        return copy;
+    }
+
+    public int getCols() {
+        return this.board[0].length;
+    }
+
+    public int getRows() {
+        return this.board.length;
     }
 
     public int getMoves() {
@@ -45,10 +64,10 @@ public class Board {
     }
 
     public Board copy() {
-        final byte[][] newBoard = new byte[board.length][board[0].length];
-        final int[] newColHeight = new int[board[0].length];
+        final byte[][] newBoard = new byte[getRows()][getCols()];
+        final int[] newColHeight = new int[getCols()];
         for (int i = 0; i < board.length; i++) {
-            System.arraycopy(board[i], 0, newBoard[i], 0, board[i].length);
+            System.arraycopy(board[i], 0, newBoard[i], 0, getCols());
         }
         System.arraycopy(colHeight, 0, newColHeight, 0, colHeight.length);
         return new Board(newBoard, newColHeight, winner);
@@ -63,7 +82,7 @@ public class Board {
 
     private boolean checkHorizontal(final int row, final int col) {
         byte sum = 0;
-        for (int i = Math.max(col - 3, 0); i < Math.min(col + 3, board[0].length); i++) {
+        for (int i = Math.max(col - 3, 0); i < Math.min(col + 4, getCols()); i++) {
             if (board[row][i] == board[row][col]) sum++;
             else sum = 0;
             if (sum >= 4) return true;
@@ -73,7 +92,7 @@ public class Board {
 
     private boolean checkVertical(final int row, final int col) {
         byte sum = 0;
-        for (int i = Math.max(row - 3, 0); i < Math.min(row + 3, board.length); i++) {
+        for (int i = Math.max(row - 3, 0); i < Math.min(row + 4, getRows()); i++) {
             if (board[i][col] == board[row][col]) sum++;
             else sum = 0;
             if (sum >= 4) return true;
@@ -86,7 +105,7 @@ public class Board {
         byte sum = 0;
         for (int i = -3; i <= 3; i++) {
             if (row + i < 0 || col + i < 0) continue;
-            else if (row + i >= board.length || col + i >= board[0].length) break;
+            else if (row + i >= getRows() || col + i >= getCols()) break;
             if (board[row + i][col + i] == board[row][col]) sum++;
             else sum = 0;
             if (sum >= 4) return true;
@@ -95,7 +114,7 @@ public class Board {
         sum = 0;
         for (int i = -3; i <= 3; i++) {
             if (row + i < 0 || col - i < 0) continue;
-            else if (row + i >= board.length || col - i >= board[0].length) break;
+            else if (row + i >= getRows() || col - i >= getCols()) break;
             if (board[row + i][col - i] == board[row][col]) sum++;
             else sum = 0;
             if (sum >= 4) return true;
