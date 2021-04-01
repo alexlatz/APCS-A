@@ -63,6 +63,10 @@ public class Board {
         return this.winner;
     }
 
+    public int getColHeight(int i) {
+        return colHeight[i];
+    }
+
     public Board copy() {
         final byte[][] newBoard = new byte[getRows()][getCols()];
         final int[] newColHeight = new int[getCols()];
