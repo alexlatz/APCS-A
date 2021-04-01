@@ -16,7 +16,7 @@ public class Main {
         ADVANCED
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         //This should be pretty fast even with the String concatenation due to a single loop approach for indexing
         final String file = textToString(fileName);
         System.out.println("Original Text:");
@@ -38,7 +38,7 @@ public class Main {
         System.out.println("Advanced words: " + words[Grade.ADVANCED.ordinal()] + "\n");
         System.out.println("Reading Level:");
         int sum = 0;
-        for (int i : count) sum += i;
+        for (final int i : count) sum += i;
         avg /= sum;
         System.out.printf("The average word length in this text is %.2f letters, so it appears to be of " +
                 gradeToString(findReadingLevel((int) Math.round(avg))) + " reading level.", avg);
@@ -67,7 +67,7 @@ public class Main {
             if (Character.isWhitespace(file.charAt(i))) {
                 String word = file.substring(lastSpace+1, i);
                 word = removePunctuation(word);
-                Grade grade = findReadingLevel(word.length());
+                final Grade grade = findReadingLevel(word.length());
                 saveWord(grade, word);
                 lastSpace = i;
             }
@@ -96,10 +96,10 @@ public class Main {
      * returns a string containing all of the text in fileName (including punctuation),
      * with words separated by a single space
      */
-    private static String textToString(String fileName) {
+    private static String textToString(final String fileName) {
         String temp = "";
         try {
-            Scanner input = new Scanner(new File(fileName));
+            final Scanner input = new Scanner(new File(fileName));
 
             //add 'words' in the file to the string, separated by a single space
             while (input.hasNext()) {
@@ -107,7 +107,7 @@ public class Main {
             }
             input.close();
 
-        } catch (Exception e) {
+        } catch (final Exception e) {
             System.out.println("Unable to locate " + fileName);
         }
         //make sure to remove any additional space that may have been added at the end of the string.
@@ -117,7 +117,7 @@ public class Main {
     /**
      * Returns the ending punctuation of a string, or the empty string if there is none
      */
-    public static String getPunctuation(String word) {
+    public static String getPunctuation(final String word) {
         String punc = "";
         for (int i = word.length() - 1; i >= 0; i--) {
             if (!Character.isLetterOrDigit(word.charAt(i))) {
