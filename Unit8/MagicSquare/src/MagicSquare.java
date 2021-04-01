@@ -1,6 +1,6 @@
 public class MagicSquare {
     public static boolean isMagicSquare(final int[][] square) {
-        int sum = square[0][0] + square[0][1] + square[0][2];
+        final int sum = square[0][0] + square[0][1] + square[0][2];
         return checkRows(sum, square) && checkCols(sum, square) && checkDiags(sum, square);
     }
 
@@ -24,7 +24,7 @@ public class MagicSquare {
         return leftDiag && rightDiag;
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         //true test
         final int[][] trueSquare = {{2,7,6},{9,5,1},{4,3,8}};
         //false test

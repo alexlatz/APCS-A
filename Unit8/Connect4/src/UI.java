@@ -3,7 +3,11 @@ import java.util.Scanner;
 
 public class UI {
     private Board board;
-    private Scanner scanner;
+    private final Scanner scanner;
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_RESET = "\u001B[0m";
 
     public UI() {
         this.scanner = new Scanner(System.in);
@@ -18,21 +22,21 @@ public class UI {
             System.out.println("How many rows would you like? (Enter 0 for the default: 6, minimum: 4)");
             try {
                 rows = scanner.nextInt();
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a number.");
+            } catch (final InputMismatchException e) {
+                System.out.println("Invalid input. Please enter an integer.");
             }
-            if (rows > 4 || rows == 0) break;
-            else System.out.println("Please enter either 0 or a number greater than 4.");
+            if (rows > 3 || rows == 0) break;
+            else System.out.println("Please enter either 0 or a number greater than 3.");
         }
         while (true) {
             System.out.println("How many columns would you like? (Enter 0 for the default: 7, minimum: 4)");
             try {
                 cols = scanner.nextInt();
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a number.");
+            } catch (final InputMismatchException e) {
+                System.out.println("Invalid input. Please enter an integer.");
             }
-            if (cols > 4 || cols == 0) break;
-            else System.out.println("Please enter either 0 or a number greater than 4.");
+            if (cols > 3 || cols == 0) break;
+            else System.out.println("Please enter either 0 or a number greater than 3.");
         }
         if (rows == 0) rows = 6;
         if (cols == 0) cols = 7;
@@ -48,9 +52,9 @@ public class UI {
             board.placeMarker(columnSelection(turn ? 1 : 2), turn);
             turn = !turn;
         }
+        printBoard();
         if (board.getWinner() != 0) System.out.println("Player " + board.getWinner() + " wins!");
         else System.out.println("The board is full! Game Over");
-        printBoard();
     }
 
     private int columnSelection(int playerNum) {
@@ -59,17 +63,18 @@ public class UI {
             System.out.println("Player " + playerNum + ": Enter a column number to place your piece.");
             try {
                 col = scanner.nextInt();
-            } catch (InputMismatchException e) {
+            } catch (final InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a number.");
             }
-            if (col <= board.getCols() && col > 0) break;
+            if (board.getColHeight(col-1) >= board.getCols()) System.out.println("This column is full. Please pick another.");
+            else if (col <= board.getCols() && col > 0) break;
             else System.out.println("Please enter a valid column number.");
         }
         return col;
     }
 
     private void printBoard() {
-        byte[][] arr = board.getBoard();
+        final int[][] arr = board.getBoard();
         for (int i = 0; i < arr.length; i++) {
             if (i != 0) {
                 System.out.print("├");
@@ -80,7 +85,7 @@ public class UI {
                     System.out.print("  " + j + " ");
                 }
                 System.out.println();
-                System.out.print("┌");
+                System.out.print(ANSI_BLUE + "┌");
                 System.out.print(" — ┬".repeat(board.getCols() - 1));
                 System.out.print(" — ┐");
             }
@@ -89,25 +94,25 @@ public class UI {
             for (int j = 0; j < board.getCols(); j++) {
                 switch (arr[i][j]) {
                     case 1:
-                        System.out.print(" 1");
+                        System.out.print(ANSI_RED + " 1" + ANSI_RESET);
                         break;
                     case 2:
-                        System.out.print(" 2");
+                        System.out.print(ANSI_YELLOW + " 2" + ANSI_RESET);
                         break;
                     default:
                         System.out.print("  ");
                 }
-                System.out.print(" |");
+                System.out.print(ANSI_BLUE + " |");
             }
             System.out.println();
         }
         System.out.print("└");
         System.out.print(" — ┴".repeat(board.getCols() - 1));
-        System.out.print(" — ┘");
+        System.out.print(" — ┘" + ANSI_RESET);
         System.out.println();
     }
 
     public static void main(String[] args) {
-        UI ui = new UI();
+        final UI ui = new UI();
     }
 }
