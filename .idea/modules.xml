@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/APCS-A.iml" filepath="$PROJECT_DIR$/.idea/APCS-A.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Unit8/Connect4/Connect4.iml" filepath="$PROJECT_DIR$/Unit8/Connect4/Connect4.iml" />
     </modules>
   </component>
 </project>
