@@ -78,51 +78,51 @@ public class Board {
 
 
     private void checkWinner(int row, int col) {
-        if (checkHorizontal(row, col, 4) || checkVertical(row, col, 4) || checkDiagonal(row, col, 4)) {
+        if (checkHorizontal(row, col) || checkVertical(row, col) || checkDiagonal(row, col)) {
             winner = board[row][col];
         }
     }
 
-    public boolean checkHorizontal(int row, int col, int num) {
+    private boolean checkHorizontal(int row, int col) {
         int sum = 0;
-        for (int i = Math.max(col - (num-1), 0); i < Math.min(col + num, getCols()); i++) {
+        for (int i = Math.max(col - 3, 0); i < Math.min(col + 4, getCols()); i++) {
             if (board[row][i] == board[row][col]) sum++;
             else sum = 0;
-            if (sum >= num) return true;
+            if (sum >= 4) return true;
         }
         return false;
     }
 
-    public boolean checkVertical(int row, int col, int num) {
+    private boolean checkVertical(int row, int col) {
         int sum = 0;
-        for (int i = Math.max(row - (num-1), 0); i < Math.min(row + num, getRows()); i++) {
+        for (int i = Math.max(row - 3, 0); i < Math.min(row + 4, getRows()); i++) {
             if (board[i][col] == board[row][col]) sum++;
             else sum = 0;
-            if (sum >= num) return true;
+            if (sum >= 4) return true;
         }
         return false;
     }
 
-    public boolean checkDiagonal(int row, int col, int num) {
+    private boolean checkDiagonal(int row, int col) {
         //bottom left -> top right
         int sum = 0;
-        for (int i = -(num-1); i <= (num-1); i++) {
+        for (int i = -3; i <= 3; i++) {
             if (row + i < 0 || col + i < 0) continue;
             else if (row + i >= getRows() || col + i >= getCols()) break;
             if (board[row + i][col + i] == board[row][col]) {
                 sum++;
             }
             else sum = 0;
-            if (sum >= num) return true;
+            if (sum >= 4) return true;
         }
         //bottom right -> top left
         sum = 0;
-        for (int i = -(num-1); i <= (num-1); i++) {
+        for (int i = -3; i <= 3; i++) {
             if (row + i < 0 || col - i < 0) continue;
             else if (row + i >= getRows() || col - i >= getCols()) break;
             if (board[row + i][col - i] == board[row][col]) sum++;
             else sum = 0;
-            if (sum >= num) return true;
+            if (sum >= 4) return true;
         }
         return false;
     }

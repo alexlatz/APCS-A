@@ -22,7 +22,7 @@ public class UI {
             System.out.println("How many rows would you like? (Enter 0 for the default: 6, minimum: 4)");
             try {
                 rows = scanner.nextInt();
-            } catch (final InputMismatchException e) {
+            } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter an integer.");
             }
             if (rows > 3 || rows == 0) break;
@@ -32,7 +32,7 @@ public class UI {
             System.out.println("How many columns would you like? (Enter 0 for the default: 7, minimum: 4)");
             try {
                 cols = scanner.nextInt();
-            } catch (final InputMismatchException e) {
+            } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter an integer.");
             }
             if (cols > 3 || cols == 0) break;

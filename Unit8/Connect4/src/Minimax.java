@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Minimax {
-    private static final double[] weight = {10.0, 100.0, 1000.0, 10000.0};
+    private static final double[] weight = {10.0, 100.0, 1000.0, 5000.0};
     private Node node;
 
     private class Node implements Comparable<Node> {
@@ -90,6 +90,7 @@ public class Minimax {
             heuristic += numInRow(1, board, arr);
             heuristic += numInRow(2, board, arr);
             heuristic += numInRow(3, board, arr);
+            heuristic += numInRow(4, board, arr);
             return heuristic;
         } else if (board.getWinner() == 2) return Double.POSITIVE_INFINITY;
         else if (board.getWinner() == 1) return Double.NEGATIVE_INFINITY;
@@ -101,51 +102,78 @@ public class Minimax {
         double sum = 0;
         for (int i = 0; i < board.getRows(); i++) {
             for (int j = 0; j < board.getCols(); j++) {
-                int current = 0;
-                if (arr[i][j] == 0) continue;
-                if (board.getColHeight(i) != 0) current += (board.checkVertical(i, j, num) ? Minimax.weight[num-1] : 0);
-                if (num == 3) current += diagonalThrees(board, arr, i, j);
-                else current += (board.checkDiagonal(i, j, num) ? Minimax.weight[num-1] : 0);
-                current += (board.checkHorizontal(i, j, num) ? Minimax.weight[num-1] : 0);
-                current *= (arr[i][j] == 2 ? 1 : -1);
-                sum += current;
+                sum += calculateHorizontal(board, arr, i, j, num);
+                sum += calculateVertical(board, arr, i, j, num);
+                sum += calculateDiagonal(board, arr, i, j, num);
             }
         }
         return sum;
     }
 
-    private static double diagonalThrees(Board board, int[][] arr, int row, int col) {
+    private static double calculateHorizontal(Board board, int[][] arr, int row, int col, int num) {
         double result = 0;
-        boolean threeFound = false;
+        int sum = 0;
+        boolean found = false;
+        for (int i = Math.max(col - 2, 0); i < Math.min(col + 3, board.getCols()); i++) {
+            if (arr[row][i] == arr[row][col]) sum++;
+            else if (num == 4 && sum == 3 && i + 1 < board.getCols() && arr[row][i+1] == 0 && board.getColHeight(i+1) == row-1) {
+                result += arr[row][col] == 1 ? -Minimax.weight[3] : Minimax.weight[3];
+            } else if (!found) {
+                result += arr[row][col] == 1 ? -Minimax.weight[num-1] : Minimax.weight[num-1];
+                found = true;
+            }
+            else sum = 0;
+        }
+        return result;
+    }
+
+    private static double calculateVertical(Board board, int[][] arr, int row, int col, int num) {
+        double result = 0;
+        int sum = 0;
+        boolean found = false;
+        for (int i = Math.max(row - (num - 1), 0); i < Math.min(row + num, board.getRows()); i++) {
+            if (arr[i][col] == arr[row][col]) sum++;
+            else if (num == 4 && sum == 3 && i-1 >= 0 && arr[i-1][col] == 0) {
+                result += arr[row][col] == 1 ? -Minimax.weight[3] : Minimax.weight[3];
+            } else if (!found) {
+                result += arr[row][col] == 1 ? -Minimax.weight[num-1] : Minimax.weight[num-1];
+                found = true;
+            }
+            else sum = 0;
+        }
+        return result;
+    }
+
+    private static double calculateDiagonal(Board board, int[][] arr, int row, int col, int num) {
+        double result = 0;
+        boolean found = false;
         //bottom left -> top right
         int sum = 0;
-        for (int i = -2; i <= 2; i++) {
+        for (int i = -(num - 1); i <= (num - 1); i++) {
             if (row + i < 0 || col + i < 0) continue;
             else if (row + i >= board.getRows() || col + i >= board.getCols()) break;
             if (arr[row + i][col + i] == arr[row][col]) {
                 sum++;
-                if (sum >= 3 && board.getColHeight(col + i) == row + i - 1) {
-                    result += arr[row][col] == 1 ? -Minimax.weight[3] : Minimax.weight[3];
-                } else if (!threeFound) {
-                    result += arr[row][col] == 1 ? -Minimax.weight[2] : Minimax.weight[2];
-                    threeFound = true;
-                }
+            } else if (num == 4 && sum == 3 && col + i + 1 < board.getCols() && board.getColHeight(col + i + 1) == row + i) {
+                result += arr[row][col] == 1 ? -Minimax.weight[3] : Minimax.weight[3];
+            } else if (!found) {
+                result += arr[row][col] == 1 ? -Minimax.weight[num-1] : Minimax.weight[num-1];
+                found = true;
             }
             else sum = 0;
         }
         //bottom right -> top left
         sum = 0;
-        for (int i = -2; i <= 2; i++) {
+        for (int i = -(num - 1); i <= (num - 1); i++) {
             if (row + i < 0 || col - i < 0) continue;
             else if (row + i >= board.getRows() || col - i >= board.getCols()) break;
             if (arr[row + i][col - i] == arr[row][col]) {
                 sum++;
-                if (sum >= 3 && board.getColHeight(col - i) == row + i - 1) {
-                    result += arr[row][col] == 1 ? -Minimax.weight[3] : Minimax.weight[3];
-                } else if (!threeFound) {
-                    result += arr[row][col] == 1 ? -Minimax.weight[2] : Minimax.weight[2];
-                    threeFound = true;
-                }
+            } else if (num == 4 && sum == 3 && col - i - 1 >= 0 && board.getColHeight(col - i - 1) == row + i) {
+                result += arr[row][col] == 1 ? -Minimax.weight[3] : Minimax.weight[3];
+            } else if (!found) {
+                result += arr[row][col] == 1 ? -Minimax.weight[num-1] : Minimax.weight[num-1];
+                found = true;
             }
             else sum = 0;
         }
