@@ -11,7 +11,7 @@ public class UI {
 
     public UI() {
         this.scanner = new Scanner(System.in);
-        startGame();
+        //startGame();
     }
 
     public void startGame() {
@@ -114,5 +114,18 @@ public class UI {
 
     public static void main(String[] args) {
         final UI ui = new UI();
+        final Board board = new Board(6, 7);
+        final Minimax minimax = new Minimax(board.copy());
+        while (board.getWinner() == 0) {
+            ui.board = board;
+            ui.printBoard();
+            System.out.println("enter move");
+            final int move = ui.scanner.nextInt();
+            if (move == -1) break;
+            board.placeMarker(move, true);
+            board.placeMarker(minimax.getMove(board)+1, false);
+            ui.board = board;
+            ui.printBoard();
+        }
     }
 }

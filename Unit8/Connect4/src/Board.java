@@ -76,22 +76,6 @@ public class Board {
         return new Board(newBoard, newColHeight, winner, moves, lastMove);
     }
 
-    public int numInRow(int num) {
-        //Not actually the best way to get number in a row, but the heuristic really doesn't have to be that good
-        int sum = 0;
-        for (int i = 0; i < getRows(); i++) {
-            for (int j = 0; j < getCols(); j++) {
-                int current = 0;
-                if (board[i][j] == 0) continue;
-                if (colHeight[i] != 0) current += (checkVertical(i, j, num) ? 1 : 0);
-                current += (checkDiagonal(i, j, num) ? 1 : 0);
-                current += (checkHorizontal(i, j, num) ? 1 : 0);
-                current *= (board[i][j] == 2 ? 1 : -1);
-                sum += current;
-            }
-        }
-        return sum;
-    }
 
     private void checkWinner(int row, int col) {
         if (checkHorizontal(row, col, 4) || checkVertical(row, col, 4) || checkDiagonal(row, col, 4)) {
@@ -99,7 +83,7 @@ public class Board {
         }
     }
 
-    private boolean checkHorizontal(int row, int col, int num) {
+    public boolean checkHorizontal(int row, int col, int num) {
         int sum = 0;
         for (int i = Math.max(col - (num-1), 0); i < Math.min(col + num, getCols()); i++) {
             if (board[row][i] == board[row][col]) sum++;
@@ -109,7 +93,7 @@ public class Board {
         return false;
     }
 
-    private boolean checkVertical(int row, int col, int num) {
+    public boolean checkVertical(int row, int col, int num) {
         int sum = 0;
         for (int i = Math.max(row - (num-1), 0); i < Math.min(row + num, getRows()); i++) {
             if (board[i][col] == board[row][col]) sum++;
@@ -119,13 +103,15 @@ public class Board {
         return false;
     }
 
-    private boolean checkDiagonal(int row, int col, int num) {
+    public boolean checkDiagonal(int row, int col, int num) {
         //bottom left -> top right
         int sum = 0;
         for (int i = -(num-1); i <= (num-1); i++) {
             if (row + i < 0 || col + i < 0) continue;
             else if (row + i >= getRows() || col + i >= getCols()) break;
-            if (board[row + i][col + i] == board[row][col]) sum++;
+            if (board[row + i][col + i] == board[row][col]) {
+                sum++;
+            }
             else sum = 0;
             if (sum >= num) return true;
         }
