@@ -2,10 +2,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Minimax {
+    //Minimax AI for connect 4 that implements alpha-beta pruning to cut down on search space
+    //The heuristic needs work, but it functions well enough that I don't want to redo it
     private static final double[] weight = {10.0, 100.0, 1000.0, 5000.0};
     private Node node;
 
-    private class Node implements Comparable<Node> {
+    private static class Node implements Comparable<Node> {
         private final Board board;
         private double value;
         private ArrayList<Node> children;
@@ -55,11 +57,9 @@ public class Minimax {
         }
         alphaBeta(this.node, 6, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, true);
         this.node.getChildren();
-        for (Node child : this.node.getChildren()) {
-            double eval = heuristic(child.board, true);
-            if (eval != 0) {
-                child.value = eval;
-            }
+        for (final Node child : this.node.getChildren()) {
+            final double eval = heuristic(child.board, true);
+            if (eval != 0) child.value = eval;
         }
         Collections.sort(this.node.getChildren());
         this.node = this.node.getChildren().get(0);
@@ -104,6 +104,7 @@ public class Minimax {
 
     private static double numInRow(int num, Board board, int[][] arr) {
         //Not actually the best way to get number in a row, but the heuristic really doesn't have to be that good
+        //In future, should probably use MCTS or make a better heuristic
         double sum = 0;
         for (int i = 0; i < board.getRows(); i++) {
             for (int j = 0; j < board.getCols(); j++) {

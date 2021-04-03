@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class UI {
     private Board board;
-    private final Scanner scanner;
+    private Scanner scanner;
     private Minimax minimax;
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_YELLOW = "\u001B[33m";
@@ -24,8 +24,10 @@ public class UI {
             System.out.println("How many rows would you like? (Enter 0 for the default: 6, minimum: 4)");
             try {
                 rows = scanner.nextInt();
-            } catch (InputMismatchException e) {
+            } catch (final InputMismatchException e) {
                 System.out.println("Invalid input. Please enter an integer.");
+                scanner.nextLine();
+                continue;
             }
             if (rows > 3 || rows == 0) break;
             else System.out.println("Please enter either 0 or a number greater than 3.");
@@ -34,8 +36,10 @@ public class UI {
             System.out.println("How many columns would you like? (Enter 0 for the default: 7, minimum: 4)");
             try {
                 cols = scanner.nextInt();
-            } catch (InputMismatchException e) {
+            } catch (final InputMismatchException e) {
                 System.out.println("Invalid input. Please enter an integer.");
+                scanner.nextLine();
+                continue;
             }
             if (cols > 3 || cols == 0) break;
             else System.out.println("Please enter either 0 or a number greater than 3.");
@@ -44,8 +48,10 @@ public class UI {
             System.out.println("Would you like to play against another player or against the computer? (Enter 2 for 2 players or 1 for the computer)");
             try {
                 choice = scanner.nextInt();
-            } catch (InputMismatchException e) {
+            } catch (final InputMismatchException e) {
                 System.out.println("Invalid input. Please enter either 1 or 2.");
+                scanner.nextLine();
+                continue;
             }
             if (choice == 1 || choice == 2) break;
             else System.out.println("Please enter either 1 or 2.");
@@ -89,9 +95,11 @@ public class UI {
                 col = scanner.nextInt();
             } catch (final InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a number.");
+                scanner.nextLine();
+                continue;
             }
-            if (board.getColHeight(col-1) >= board.getCols()) System.out.println("This column is full. Please pick another.");
-            else if (col <= board.getCols() && col > 0) break;
+            if (col <= board.getCols() && col > 0) break;
+            else if (board.getColHeight(col-1) >= board.getCols()) System.out.println("This column is full. Please pick another.");
             else System.out.println("Please enter a valid column number.");
         }
         return col;
