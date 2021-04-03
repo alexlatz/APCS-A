@@ -109,17 +109,15 @@ public class Board {
         for (int i = -3; i <= 3; i++) {
             if (row + i < 0 || col + i < 0) continue;
             else if (row + i >= getRows() || col + i >= getCols()) break;
-            if (board[row + i][col + i] == board[row][col]) {
-                sum++;
-            }
+            if (board[row + i][col + i] == board[row][col]) sum++;
             else sum = 0;
             if (sum >= 4) return true;
         }
         //bottom right -> top left
         sum = 0;
         for (int i = -3; i <= 3; i++) {
-            if (row + i < 0 || col - i < 0) continue;
-            else if (row + i >= getRows() || col - i >= getCols()) break;
+            if (row + i < 0 || col - i >= getCols()) continue;
+            else if (row + i >= getRows() || col - i < 0) break;
             if (board[row + i][col - i] == board[row][col]) sum++;
             else sum = 0;
             if (sum >= 4) return true;

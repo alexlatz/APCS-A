@@ -4,6 +4,7 @@ import java.util.Scanner;
 public class UI {
     private Board board;
     private final Scanner scanner;
+    private Minimax minimax;
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_YELLOW = "\u001B[33m";
     public static final String ANSI_BLUE = "\u001B[34m";
@@ -11,13 +12,14 @@ public class UI {
 
     public UI() {
         this.scanner = new Scanner(System.in);
-        //startGame();
+        startGame();
     }
 
     public void startGame() {
         System.out.println("Welcome to Connect 4!");
         int rows = -1;
         int cols = -1;
+        int choice = -1;
         while (true) {
             System.out.println("How many rows would you like? (Enter 0 for the default: 6, minimum: 4)");
             try {
@@ -38,22 +40,44 @@ public class UI {
             if (cols > 3 || cols == 0) break;
             else System.out.println("Please enter either 0 or a number greater than 3.");
         }
+        while (true) {
+            System.out.println("Would you like to play against another player or against the computer? (Enter 2 for 2 players or 1 for the computer)");
+            try {
+                choice = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter either 1 or 2.");
+            }
+            if (choice == 1 || choice == 2) break;
+            else System.out.println("Please enter either 1 or 2.");
+        }
         if (rows == 0) rows = 6;
         if (cols == 0) cols = 7;
-        gameLoop(rows, cols);
+        gameLoop(rows, cols, choice);
     }
 
-    private void gameLoop(int rows, int cols) {
+    private void gameLoop(int rows, int cols, int choice) {
         this.board = new Board(rows, cols);
+        if (choice == 1) minimax = new Minimax(this.board.copy());
         boolean turn = true;
         while (board.getMoves() < rows*cols && board.getWinner() == 0) {
-            System.out.println("The board:");
-            printBoard();
-            board.placeMarker(columnSelection(turn ? 1 : 2), turn);
+            if (choice == 2) {
+                System.out.println("The board:");
+                printBoard();
+                board.placeMarker(columnSelection(turn ? 1 : 2), turn);
+            } else if (turn) {
+                System.out.println("The board:");
+                printBoard();
+                board.placeMarker(columnSelection(1), true);
+            } else {
+                board.placeMarker(minimax.getMove(board)+1, false);
+            }
             turn = !turn;
         }
         printBoard();
-        if (board.getWinner() != 0) System.out.println("Player " + board.getWinner() + " wins!");
+        if (board.getWinner() != 0) {
+            if (choice == 1 && board.getWinner() == 2) System.out.println("The computer wins!");
+            else System.out.println("Player " + board.getWinner() + " wins!");
+        }
         else System.out.println("The board is full! Game Over");
     }
 
@@ -114,18 +138,5 @@ public class UI {
 
     public static void main(String[] args) {
         final UI ui = new UI();
-        final Board board = new Board(6, 7);
-        final Minimax minimax = new Minimax(board.copy());
-        while (board.getWinner() == 0) {
-            ui.board = board;
-            ui.printBoard();
-            System.out.println("enter move");
-            final int move = ui.scanner.nextInt();
-            if (move == -1) break;
-            board.placeMarker(move, true);
-            board.placeMarker(minimax.getMove(board)+1, false);
-            ui.board = board;
-            ui.printBoard();
-        }
     }
 }

@@ -55,13 +55,19 @@ public class Minimax {
         }
         alphaBeta(this.node, 6, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, true);
         this.node.getChildren();
+        for (Node child : this.node.getChildren()) {
+            double eval = heuristic(child.board, true);
+            if (eval != 0) {
+                child.value = eval;
+            }
+        }
         Collections.sort(this.node.getChildren());
         this.node = this.node.getChildren().get(0);
         return this.node.board.getLastMove();
     }
 
     public double alphaBeta(Node node, int depth, double alpha, double beta, boolean maximizing) {
-        if (depth == 0 || node.isTerminal()) return heuristic(node.board);
+        if (depth == 0 || node.isTerminal()) return heuristic(node.board, false);
         if (maximizing) {
             node.getChildren();
             node.value = Double.NEGATIVE_INFINITY;
@@ -82,10 +88,9 @@ public class Minimax {
         return node.value;
     }
 
-    //TODO: calculate 1,2 at once
-    private static double heuristic(Board board) {
+    private static double heuristic(Board board, boolean endgame) {
         final int[][] arr = board.getBoard();
-        if (board.getWinner() == 0 && board.getMoves() < board.getCols()*board.getRows()) {
+        if (!endgame && board.getWinner() == 0 && board.getMoves() < board.getCols()*board.getRows()) {
             double heuristic = 0.0;
             heuristic += numInRow(1, board, arr);
             heuristic += numInRow(2, board, arr);
@@ -114,15 +119,16 @@ public class Minimax {
         double result = 0;
         int sum = 0;
         boolean found = false;
-        for (int i = Math.max(col - 2, 0); i < Math.min(col + 3, board.getCols()); i++) {
+        for (int i = Math.max(col -(num-1), 0); i < Math.min(col + num, board.getCols()); i++) {
             if (arr[row][i] == arr[row][col]) sum++;
             else if (num == 4 && sum == 3 && i + 1 < board.getCols() && arr[row][i+1] == 0 && board.getColHeight(i+1) == row-1) {
                 result += arr[row][col] == 1 ? -Minimax.weight[3] : Minimax.weight[3];
-            } else if (!found) {
+                found = true;
+            } else sum = 0;
+            if (!found && sum >= num) {
                 result += arr[row][col] == 1 ? -Minimax.weight[num-1] : Minimax.weight[num-1];
                 found = true;
             }
-            else sum = 0;
         }
         return result;
     }
@@ -135,11 +141,12 @@ public class Minimax {
             if (arr[i][col] == arr[row][col]) sum++;
             else if (num == 4 && sum == 3 && i-1 >= 0 && arr[i-1][col] == 0) {
                 result += arr[row][col] == 1 ? -Minimax.weight[3] : Minimax.weight[3];
-            } else if (!found) {
+                found = true;
+            } else sum = 0;
+            if (!found && sum >= num) {
                 result += arr[row][col] == 1 ? -Minimax.weight[num-1] : Minimax.weight[num-1];
                 found = true;
             }
-            else sum = 0;
         }
         return result;
     }
@@ -156,26 +163,29 @@ public class Minimax {
                 sum++;
             } else if (num == 4 && sum == 3 && col + i + 1 < board.getCols() && board.getColHeight(col + i + 1) == row + i) {
                 result += arr[row][col] == 1 ? -Minimax.weight[3] : Minimax.weight[3];
-            } else if (!found) {
+                found = true;
+            } else sum = 0;
+            if (!found && sum >= num) {
                 result += arr[row][col] == 1 ? -Minimax.weight[num-1] : Minimax.weight[num-1];
                 found = true;
             }
-            else sum = 0;
         }
         //bottom right -> top left
         sum = 0;
+        found = false;
         for (int i = -(num - 1); i <= (num - 1); i++) {
-            if (row + i < 0 || col - i < 0) continue;
-            else if (row + i >= board.getRows() || col - i >= board.getCols()) break;
+            if (row + i < 0 || col - i >= board.getCols()) continue;
+            else if (row + i >= board.getRows() || col - i < 0) break;
             if (arr[row + i][col - i] == arr[row][col]) {
                 sum++;
             } else if (num == 4 && sum == 3 && col - i - 1 >= 0 && board.getColHeight(col - i - 1) == row + i) {
                 result += arr[row][col] == 1 ? -Minimax.weight[3] : Minimax.weight[3];
-            } else if (!found) {
+                found = true;
+            } else sum = 0;
+            if (!found && sum >= num) {
                 result += arr[row][col] == 1 ? -Minimax.weight[num-1] : Minimax.weight[num-1];
                 found = true;
             }
-            else sum = 0;
         }
         return result;
     }
