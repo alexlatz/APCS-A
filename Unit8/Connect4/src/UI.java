@@ -111,9 +111,9 @@ public class UI {
                 continue;
             }
             if (col <= board.getCols() && col > 0)
-                break;
-            else if (board.getColHeight(col - 1) >= board.getCols())
-                System.out.println("This column is full. Please pick another.");
+                if (board.getColHeight(col - 1) >= board.getCols()-1)
+                    System.out.println("This column is full. Please pick another.");
+                else break;
             else
                 System.out.println("Please enter a valid column number.");
         }
