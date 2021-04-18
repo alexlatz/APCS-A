@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/APCS-A.iml" filepath="$PROJECT_DIR$/.idea/APCS-A.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Unit10/ModelingInheritance/ModelingInheritance.iml" filepath="$PROJECT_DIR$/Unit10/ModelingInheritance/ModelingInheritance.iml" />
     </modules>
   </component>
 </project>
