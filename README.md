@@ -1,7 +1,5 @@
-#  APCS-A
+# AP Computer Science A
 
-## Alex Latz
+This repository has all of my submitted work from AP Comp Sci A, including some projects that were massively overhauled.
 
-### 2020-2021 School Year
-
-This is the repository for my APCS-A classwork and homework.
+For some examples of extended work, see Unit 2's Maze Generator and Unit 8's Connect 4 (with fully working minimax AI).
